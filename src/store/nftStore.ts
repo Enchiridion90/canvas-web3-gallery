@@ -36,7 +36,7 @@ interface NFTState {
   isLoading: boolean;
   // Actions
   setNFTs: (nfts: NFT[]) => void;
-  selectNFT: (id: string) => void;
+  selectNFT: (id: string) => boolean;
   clearSelectedNFT: () => void;
   setSortOption: (option: SortOption) => void;
   setViewMode: (mode: ViewMode) => void;
@@ -206,6 +206,7 @@ export const useNFTStore = create<NFTState>((set, get) => ({
     const { nfts } = get();
     const selectedNFT = nfts.find((nft) => nft.id === id) || null;
     set({ selectedNFT });
+    return selectedNFT !== null; // Return true if NFT was found
   },
 
   clearSelectedNFT: () => set({ selectedNFT: null }),
