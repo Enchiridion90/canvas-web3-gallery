@@ -39,9 +39,7 @@ export default function Index() {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="text-lg rounded-full">
-                <Link to="/create">
-                  Mint New NFT
-                </Link>
+                <Link to="/create">Create Character</Link>
               </Button>
             </div>
           </motion.div>
