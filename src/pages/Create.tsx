@@ -140,9 +140,7 @@ export default function Create() {
             
             {!isConnected ? <div className="bg-muted/30 rounded-xl p-8 text-center">
                 <h2 className="text-xl font-medium mb-4">Connect your wallet</h2>
-                <p className="text-muted-foreground mb-6">
-                  You need to connect your wallet to create and mint NFTs
-                </p>
+                <p className="text-muted-foreground mb-6">Connect your wallet to mint a new character NFT</p>
                 <Button onClick={connect}>Connect Wallet</Button>
               </div> : <form onSubmit={handleSubmit} className="space-y-8">
                 {/* File Upload Section */}
