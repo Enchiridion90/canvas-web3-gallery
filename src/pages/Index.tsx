@@ -130,9 +130,7 @@ export default function Index() {
                 <Users className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">NPCs</h3>
-              <p className="text-muted-foreground text-center">
-                Unique merchants, engineers, and companions to advance your strategy.
-              </p>
+              <p className="text-muted-foreground text-center">Unique merchants, workers, and companions to advance your strategy.</p>
             </motion.div>
           </div>
         </div>
