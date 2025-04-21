@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Heart, User, Users } from "lucide-react";
+import { Heart, User, Users, Map } from "lucide-react";
 import { shortenAddress } from "@/contexts/Web3Provider";
 import { NFT, useNFTStore } from "@/store/nftStore";
 import { Badge } from "@/components/ui/badge";
@@ -12,18 +12,6 @@ interface NFTCardProps {
   nft: NFT;
   className?: string;
 }
-
-// Category styles
-const categoryStyles: Record<string, string> = {
-  player: "bg-gradient-to-r from-blue-600/80 via-indigo-500/90 to-violet-600/80 text-white shadow",
-  land: "bg-gradient-to-r from-green-600/80 via-lime-400/90 to-teal-400/80 text-white shadow",
-  npc: "bg-gradient-to-r from-yellow-600/80 via-amber-400/90 to-orange-500/80 text-white shadow",
-};
-const categoryIcons: Record<string, React.ReactNode> = {
-  player: <User className="h-3.5 w-3.5 mr-1" />,
-  land: <MapIcon className="h-3.5 w-3.5 mr-1" />,
-  npc: <Users className="h-3.5 w-3.5 mr-1" />,
-};
 
 // Custom Map icon component for land category since LandPlot isn't available in lucide-react
 const MapIcon = () => (
@@ -37,13 +25,25 @@ const MapIcon = () => (
     strokeWidth="2" 
     strokeLinecap="round" 
     strokeLinejoin="round"
-    className="lucide lucide-map"
   >
     <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
     <path d="M9 3v15"/>
     <path d="M15 6v15"/>
   </svg>
 );
+
+// Category styles
+const categoryStyles: Record<string, string> = {
+  player: "bg-gradient-to-r from-blue-600/80 via-indigo-500/90 to-violet-600/80 text-white shadow",
+  land: "bg-gradient-to-r from-green-600/80 via-lime-400/90 to-teal-400/80 text-white shadow",
+  npc: "bg-gradient-to-r from-yellow-600/80 via-amber-400/90 to-orange-500/80 text-white shadow",
+};
+
+const categoryIcons: Record<string, React.ReactNode> = {
+  player: <User className="h-3.5 w-3.5 mr-1" />,
+  land: <MapIcon />,
+  npc: <Users className="h-3.5 w-3.5 mr-1" />,
+};
 
 export function NFTCard({ nft, className }: NFTCardProps) {
   const [isLoading, setIsLoading] = useState(true);
