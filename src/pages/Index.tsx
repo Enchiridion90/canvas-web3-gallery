@@ -88,9 +88,7 @@ export default function Index() {
                 <User className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Player Characters</h3>
-              <p className="text-muted-foreground text-center">
-                Legendary and rare playable heroes—train, equip, and deploy on the battlefield.
-              </p>
+              <p className="text-muted-foreground text-center">Playable in-game characters.</p>
             </motion.div>
             
             <motion.div initial={{
