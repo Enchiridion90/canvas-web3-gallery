@@ -1,5 +1,6 @@
-
 import { create } from "zustand";
+
+export type NFTCategory = "player" | "land" | "npc"; // Added category types
 
 export type NFTStatus = "listed" | "owned" | "sold";
 export type SortOption = "price" | "newest" | "oldest" | "trending";
@@ -15,6 +16,7 @@ export interface NFT {
   price: string;
   likes: number;
   status: NFTStatus;
+  category: NFTCategory; // Added
   createdAt: string;
   collection?: string;
   attributes?: {
@@ -48,10 +50,118 @@ interface NFTState {
   fetchNFTs: () => Promise<void>;
 }
 
-// Mock NFT data for initial state
+// Updated mock NFT data with categories (player, land, npc)
 const mockNfts: NFT[] = [
   {
     id: "1",
+    name: "Commander Vox",
+    description: "Legendary player character for the Axion Arena.",
+    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=500&h=500&auto=format&fit=crop",
+    owner: "0x1234...5678",
+    creator: "0xabcd...efgh",
+    price: "7.0",
+    likes: 18,
+    status: "listed",
+    category: "player", // new property
+    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+    collection: "Prime Champions",
+    attributes: [
+      { trait_type: "Class", value: "Tank" },
+      { trait_type: "Faction", value: "Resistance" },
+    ],
+  },
+  {
+    id: "2",
+    name: "Neon Flats Land Plot",
+    description: "Premium land parcel within Neo District, yields rare resources.",
+    image: "https://images.unsplash.com/photo-1633108942232-e5d6a412dfca?q=80&w=500&h=500&auto=format&fit=crop",
+    owner: "0x2345...6789",
+    creator: "0xbcde...fghi",
+    price: "12.5",
+    likes: 24,
+    status: "listed",
+    category: "land", // new property
+    createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+    collection: "Neo District",
+    attributes: [
+      { trait_type: "Size", value: "XL" },
+      { trait_type: "Yield", value: "Rare Crystals" },
+    ],
+  },
+  {
+    id: "3",
+    name: "Fixer Glix",
+    description: "Tech NPC for your squad. Repairs, upgrades, and customizes gear.",
+    image: "https://images.unsplash.com/photo-1634574740449-130a97f3a9c4?q=80&w=500&h=500&auto=format&fit=crop",
+    owner: "0x3456...7890",
+    creator: "0xcdef...ghij",
+    price: "3.3",
+    likes: 36,
+    status: "sold",
+    category: "npc",
+    createdAt: new Date(Date.now() - 86400000 * 8).toISOString(),
+    collection: "NPC Guild",
+    attributes: [
+      { trait_type: "Role", value: "Engineer" },
+      { trait_type: "Skill", value: "Repair Boost" },
+    ],
+  },
+  {
+    id: "4",
+    name: "Frostbyte Ranger",
+    description: "Epic player character with frost abilities.",
+    image: "https://images.unsplash.com/photo-1614851099511-536776e506ae?q=80&w=500&h=500&auto=format&fit=crop",
+    owner: "0x4567...8901",
+    creator: "0xcdef...ghij",
+    price: "5.2",
+    likes: 45,
+    status: "listed",
+    category: "player",
+    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
+    collection: "Prime Champions",
+    attributes: [
+      { trait_type: "Class", value: "Scout" },
+      { trait_type: "Faction", value: "Frostbyte" },
+    ],
+  },
+  {
+    id: "5",
+    name: "Citadel Lot 18-B",
+    description: "Central fortress land plot. Major strategic advantage in-game.",
+    image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=500&h=500&auto=format&fit=crop",
+    owner: "0x5678...9012",
+    creator: "0xefgh...ijkl",
+    price: "18.3",
+    likes: 29,
+    status: "owned",
+    category: "land",
+    createdAt: new Date(Date.now() - 86400000 * 12).toISOString(),
+    collection: "Citadel Estates",
+    attributes: [
+      { trait_type: "Size", value: "Large" },
+      { trait_type: "Ownership", value: "Fortress" },
+    ],
+  },
+  {
+    id: "6",
+    name: "Dockhand Koba",
+    description: "NPC that unlocks advanced trading missions.",
+    image: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?q=80&w=500&h=500&auto=format&fit=crop",
+    owner: "0x6789...0123",
+    creator: "0xfghi...jklm",
+    price: "2.1",
+    likes: 52,
+    status: "listed",
+    category: "npc",
+    createdAt: new Date(Date.now() - 86400000 * 4).toISOString(),
+    collection: "Dockside NPCs",
+    attributes: [
+      { trait_type: "Role", value: "Trader" },
+      { trait_type: "Skill", value: "Resource Bonus" },
+    ],
+  },
+  {
+    id: "7",
     name: "Abstract Dimension #1",
     description: "A journey through abstract dimensions and vibrant colors.",
     image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=500&h=500&auto=format&fit=crop",
@@ -60,6 +170,7 @@ const mockNfts: NFT[] = [
     price: "0.5",
     likes: 18,
     status: "listed",
+    category: "player",
     createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
     collection: "Abstract Dimensions",
     attributes: [
@@ -68,7 +179,7 @@ const mockNfts: NFT[] = [
     ],
   },
   {
-    id: "2",
+    id: "8",
     name: "Digital Landscape #4",
     description: "Explore this unique digital landscape with futuristic elements.",
     image: "https://images.unsplash.com/photo-1633108942232-e5d6a412dfca?q=80&w=500&h=500&auto=format&fit=crop",
@@ -77,6 +188,7 @@ const mockNfts: NFT[] = [
     price: "0.8",
     likes: 24,
     status: "listed",
+    category: "land",
     createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
     collection: "Digital Landscapes",
     attributes: [
@@ -85,7 +197,7 @@ const mockNfts: NFT[] = [
     ],
   },
   {
-    id: "3",
+    id: "9",
     name: "Cosmic Voyage",
     description: "A visual journey through the cosmos and beyond.",
     image: "https://images.unsplash.com/photo-1634574740449-130a97f3a9c4?q=80&w=500&h=500&auto=format&fit=crop",
@@ -94,96 +206,12 @@ const mockNfts: NFT[] = [
     price: "1.2",
     likes: 36,
     status: "sold",
+    category: "npc",
     createdAt: new Date(Date.now() - 86400000 * 8).toISOString(),
     collection: "Cosmic Series",
     attributes: [
       { trait_type: "Background", value: "Deep Space" },
       { trait_type: "Style", value: "Cosmic" },
-    ],
-  },
-  {
-    id: "4",
-    name: "Neon Dreams",
-    description: "A cyberpunk-inspired artwork with vibrant neon colors.",
-    image: "https://images.unsplash.com/photo-1614851099511-536776e506ae?q=80&w=500&h=500&auto=format&fit=crop",
-    owner: "0x4567...8901",
-    creator: "0xcdef...ghij",
-    price: "0.75",
-    likes: 45,
-    status: "listed",
-    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
-    collection: "Neon Collection",
-    attributes: [
-      { trait_type: "Background", value: "Urban" },
-      { trait_type: "Style", value: "Cyberpunk" },
-    ],
-  },
-  {
-    id: "5",
-    name: "Pixel Paradise",
-    description: "A nostalgic pixel art scene reminiscent of early video games.",
-    image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=500&h=500&auto=format&fit=crop",
-    owner: "0x5678...9012",
-    creator: "0xefgh...ijkl",
-    price: "0.3",
-    likes: 29,
-    status: "owned",
-    createdAt: new Date(Date.now() - 86400000 * 12).toISOString(),
-    collection: "Pixel Art",
-    attributes: [
-      { trait_type: "Background", value: "Pixel" },
-      { trait_type: "Style", value: "Retro" },
-    ],
-  },
-  {
-    id: "6",
-    name: "Fluid Mechanics",
-    description: "An exploration of fluid dynamics and color interactions.",
-    image: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?q=80&w=500&h=500&auto=format&fit=crop",
-    owner: "0x6789...0123",
-    creator: "0xfghi...jklm",
-    price: "1.5",
-    likes: 52,
-    status: "listed",
-    createdAt: new Date(Date.now() - 86400000 * 4).toISOString(),
-    collection: "Fluid Art",
-    attributes: [
-      { trait_type: "Background", value: "Fluid" },
-      { trait_type: "Style", value: "Abstract" },
-    ],
-  },
-  {
-    id: "7",
-    name: "Geometric Harmony",
-    description: "A perfect balance of geometric shapes and harmony.",
-    image: "https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=500&h=500&auto=format&fit=crop",
-    owner: "0x7890...1234",
-    creator: "0xghij...klmn",
-    price: "0.65",
-    likes: 31,
-    status: "listed",
-    createdAt: new Date(Date.now() - 86400000 * 7).toISOString(),
-    collection: "Geometric Collection",
-    attributes: [
-      { trait_type: "Background", value: "White" },
-      { trait_type: "Style", value: "Geometric" },
-    ],
-  },
-  {
-    id: "8",
-    name: "Virtual Reality",
-    description: "A glimpse into the future of virtual worlds and experiences.",
-    image: "https://images.unsplash.com/photo-1617396900799-f4ec2b43c7ae?q=80&w=500&h=500&auto=format&fit=crop",
-    owner: "0x8901...2345",
-    creator: "0xhijk...lmno",
-    price: "2.0",
-    likes: 67,
-    status: "sold",
-    createdAt: new Date(Date.now() - 86400000 * 9).toISOString(),
-    collection: "Virtual Worlds",
-    attributes: [
-      { trait_type: "Background", value: "Digital" },
-      { trait_type: "Style", value: "Futuristic" },
     ],
   },
 ];

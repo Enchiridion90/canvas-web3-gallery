@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -12,6 +11,18 @@ interface NFTCardProps {
   nft: NFT;
   className?: string;
 }
+
+// Category styles
+const categoryStyles: Record<string, string> = {
+  player: "bg-gradient-to-r from-blue-600/80 via-indigo-500/90 to-violet-600/80 text-white shadow",
+  land: "bg-gradient-to-r from-green-600/80 via-lime-400/90 to-teal-400/80 text-white shadow",
+  npc: "bg-gradient-to-r from-yellow-600/80 via-amber-400/90 to-orange-500/80 text-white shadow",
+};
+const categoryIcons: Record<string, React.ReactNode> = {
+  player: <User className="h-3.5 w-3.5 mr-1" />,
+  land: <LandPlot className="h-3.5 w-3.5 mr-1" />,
+  npc: <Users className="h-3.5 w-3.5 mr-1" />,
+};
 
 export function NFTCard({ nft, className }: NFTCardProps) {
   const [isLoading, setIsLoading] = useState(true);
@@ -64,6 +75,17 @@ export function NFTCard({ nft, className }: NFTCardProps) {
             )} 
           />
         </button>
+        
+        <div className="absolute top-3 left-3 flex items-center">
+          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${categoryStyles[nft.category] || ""}`}>
+            {categoryIcons[nft.category]} 
+            {nft.category === "player"
+              ? "Player"
+              : nft.category === "land"
+              ? "Land"
+              : "NPC"}
+          </span>
+        </div>
         
         <div className="absolute bottom-3 left-3">
           <Badge className={cn("badge", statusStyles[nft.status])}>

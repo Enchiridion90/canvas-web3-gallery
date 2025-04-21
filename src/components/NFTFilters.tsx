@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNFTStore, SortOption, NFTStatus } from "@/store/nftStore";
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,10 @@ import {
   Clock,
   DollarSign,
   TrendingUp,
-  FilterX
+  FilterX,
+  LandPlot,
+  Users,
+  User
 } from "lucide-react";
 
 export function NFTFilters() {
@@ -50,13 +52,33 @@ export function NFTFilters() {
   } = useNFTStore();
 
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
 
-  // Get unique collections from NFTs
   const collections = Array.from(
     new Set(nfts.map((nft) => nft.collection).filter(Boolean) as string[])
   );
 
-  // Sort options with icons
+  const categoryOptions = [
+    { value: "player", label: "Player Characters", icon: <User className="h-4 w-4" /> },
+    { value: "land", label: "Land", icon: <LandPlot className="h-4 w-4" /> },
+    { value: "npc", label: "NPCs", icon: <Users className="h-4 w-4" /> },
+  ];
+
+  const effectiveFilteredNfts = nfts.filter((nft) => {
+    if (categoryFilter && nft.category !== categoryFilter) return false;
+    if (statusFilter && nft.status !== statusFilter) return false;
+    if (collectionFilter && nft.collection !== collectionFilter) return false;
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      return (
+        nft.name.toLowerCase().includes(query) ||
+        nft.description.toLowerCase().includes(query) ||
+        nft.collection?.toLowerCase().includes(query)
+      );
+    }
+    return true;
+  });
+
   const sortOptions: { value: SortOption; label: string; icon: React.ReactNode }[] = [
     { value: "newest", label: "Newest", icon: <Clock className="h-4 w-4" /> },
     { value: "oldest", label: "Oldest", icon: <Clock className="h-4 w-4" /> },
@@ -64,26 +86,41 @@ export function NFTFilters() {
     { value: "trending", label: "Trending", icon: <TrendingUp className="h-4 w-4" /> },
   ];
 
-  // Status filter options
   const statusOptions: { value: NFTStatus; label: string }[] = [
     { value: "listed", label: "For Sale" },
     { value: "owned", label: "Owned" },
     { value: "sold", label: "Sold" },
   ];
 
-  // Clear all filters
   const clearFilters = () => {
     setStatusFilter(null);
     setCollectionFilter(null);
     setSearchQuery("");
+    setCategoryFilter(null);
   };
 
-  // Determine if any filters are active
-  const hasActiveFilters = statusFilter !== null || collectionFilter !== null || searchQuery !== "";
+  const hasActiveFilters = statusFilter !== null || collectionFilter !== null || searchQuery !== "" || categoryFilter !== null;
 
   return (
     <div className="mb-8">
-      {/* Desktop filters */}
+      <div className="flex gap-2 items-center mb-4">
+        <span className="font-medium text-sm mr-2">Category:</span>
+        {categoryOptions.map((option) => (
+          <button
+            key={option.value}
+            className={`flex items-center gap-1 px-3 py-1.5 rounded-full
+              ${categoryFilter === option.value
+                ? "bg-primary text-primary-foreground shadow"
+                : "bg-muted text-foreground hover:bg-accent"}
+              transition duration-200`}
+            onClick={() => setCategoryFilter(categoryFilter === option.value ? null : option.value)}
+          >
+            {option.icon}
+            <span className="text-sm">{option.label}</span>
+          </button>
+        ))}
+      </div>
+
       <div className="hidden md:block space-y-6">
         <div className="flex justify-between items-center">
           <div className="flex-1 mr-4">
@@ -99,7 +136,6 @@ export function NFTFilters() {
           </div>
           
           <div className="flex items-center space-x-4">
-            {/* Status Tabs */}
             <Tabs
               value={statusFilter || "all"}
               onValueChange={(value) => setStatusFilter(value === "all" ? null : value as NFTStatus)}
@@ -115,7 +151,6 @@ export function NFTFilters() {
               </TabsList>
             </Tabs>
             
-            {/* Collection Filter */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="flex items-center">
@@ -138,7 +173,6 @@ export function NFTFilters() {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            {/* Sort Options */}
             <Select
               value={sortOption}
               onValueChange={(value) => setSortOption(value as SortOption)}
@@ -158,7 +192,6 @@ export function NFTFilters() {
               </SelectContent>
             </Select>
             
-            {/* View Mode Toggles */}
             <div className="flex bg-muted rounded-md p-1">
               <Button
                 variant={viewMode === "grid" ? "secondary" : "ghost"}
@@ -180,7 +213,6 @@ export function NFTFilters() {
               </Button>
             </div>
             
-            {/* Clear Filters */}
             {hasActiveFilters && (
               <Button 
                 variant="ghost" 
@@ -196,7 +228,6 @@ export function NFTFilters() {
         </div>
       </div>
       
-      {/* Mobile filters toggle */}
       <div className="md:hidden">
         <div className="flex items-center justify-between mb-4">
           <div className="flex-1 mr-2">
