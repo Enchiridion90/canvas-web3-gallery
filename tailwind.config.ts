@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -144,7 +145,8 @@ export default {
 			},
 			boxShadow: {
 				card: '0 10px 15px -3px rgba(0, 0, 0, 0.12), 0 4px 10px -2px rgba(134,86,232, 0.09)',
-				'card-hover': '0 20px 25px -5px rgba(0, 255, 255, 0.09), 0 10px 24px -5px rgba(140, 136, 255, 0.11)'
+				'card-hover': '0 20px 25px -5px rgba(0, 255, 255, 0.09), 0 10px 24px -5px rgba(140, 136, 255, 0.11)',
+				'glass': '0 4px 15px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(255, 255, 255, 0.05)'
 			},
 			backgroundImage: {
 				"game-gradient": "linear-gradient(105deg, #214b7c 2%, #2d2248 63%, #7a43c6 100%)",

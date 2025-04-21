@@ -1,7 +1,8 @@
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Heart } from "lucide-react";
+import { Heart, User, Users } from "lucide-react";
 import { shortenAddress } from "@/contexts/Web3Provider";
 import { NFT, useNFTStore } from "@/store/nftStore";
 import { Badge } from "@/components/ui/badge";
@@ -20,9 +21,29 @@ const categoryStyles: Record<string, string> = {
 };
 const categoryIcons: Record<string, React.ReactNode> = {
   player: <User className="h-3.5 w-3.5 mr-1" />,
-  land: <LandPlot className="h-3.5 w-3.5 mr-1" />,
+  land: <MapIcon className="h-3.5 w-3.5 mr-1" />,
   npc: <Users className="h-3.5 w-3.5 mr-1" />,
 };
+
+// Custom Map icon component for land category since LandPlot isn't available in lucide-react
+const MapIcon = () => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width="24" 
+    height="24" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+    className="lucide lucide-map"
+  >
+    <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
+    <path d="M9 3v15"/>
+    <path d="M15 6v15"/>
+  </svg>
+);
 
 export function NFTCard({ nft, className }: NFTCardProps) {
   const [isLoading, setIsLoading] = useState(true);
