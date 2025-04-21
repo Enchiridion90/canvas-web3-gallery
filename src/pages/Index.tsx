@@ -88,7 +88,7 @@ export default function Index() {
                 <User className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Player Characters</h3>
-              <p className="text-muted-foreground text-center">Unique, playable in-game characters.</p>
+              <p className="text-muted-foreground text-center">Playable in-game characters with unique trait combinations.</p>
             </motion.div>
             
             <motion.div initial={{
@@ -107,9 +107,7 @@ export default function Index() {
                 <LandPlot className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Land Assets</h3>
-              <p className="text-muted-foreground text-center">
-                Buy, sell, or develop exclusive land in the Axion universe.
-              </p>
+              <p className="text-muted-foreground text-center">Buy, sell, or develop exclusive plots of land in the Axion universe.</p>
             </motion.div>
             
             <motion.div initial={{
