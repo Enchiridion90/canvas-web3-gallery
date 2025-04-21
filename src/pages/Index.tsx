@@ -5,24 +5,26 @@ import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 import { NFTCard } from "@/components/NFTCard";
 import { useNFTStore } from "@/store/nftStore";
-
 export default function Index() {
-  const { nfts } = useNFTStore();
+  const {
+    nfts
+  } = useNFTStore();
   const featuredNfts = nfts.slice(0, 4);
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Header />
       
       {/* Hero Section */}
       <section className="container mx-auto px-4 pt-28 pb-16 md:pt-36 md:pb-24">
         <div className="flex flex-col md:flex-row items-center gap-12">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex-1"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.5
+        }} className="flex-1">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
               Upgrade Your Game—Trade Rare Digital Assets
             </h1>
@@ -44,22 +46,20 @@ export default function Index() {
             </div>
           </motion.div>
           
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="flex-1"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          scale: 0.9
+        }} animate={{
+          opacity: 1,
+          scale: 1
+        }} transition={{
+          duration: 0.7,
+          delay: 0.2
+        }} className="flex-1">
             <div className="grid grid-cols-2 gap-4">
-              {featuredNfts.map((nft) => (
-                <div key={nft.id} className="aspect-square rounded-xl overflow-hidden shadow-card hover:shadow-card-hover border-2 border-primary/60 transition-all duration-300">
-                  <img 
-                    src={nft.image} 
-                    alt={nft.name} 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
+              {featuredNfts.map(nft => <div key={nft.id} className="aspect-square rounded-xl overflow-hidden shadow-card hover:shadow-card-hover border-2 border-primary/60 transition-all duration-300">
+                  <img src={nft.image} alt={nft.name} className="w-full h-full object-cover" />
+                </div>)}
             </div>
           </motion.div>
         </div>
@@ -73,13 +73,17 @@ export default function Index() {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="bg-card glass-card rounded-xl p-8 flex flex-col items-center"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.5
+          }} className="bg-card glass-card rounded-xl p-8 flex flex-col items-center">
               <div className="bg-primary/30 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4">
                 <User className="h-8 w-8 text-primary" />
               </div>
@@ -89,13 +93,18 @@ export default function Index() {
               </p>
             </motion.div>
             
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-card glass-card rounded-xl p-8 flex flex-col items-center"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.5,
+            delay: 0.2
+          }} className="bg-card glass-card rounded-xl p-8 flex flex-col items-center">
               <div className="bg-primary/30 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4">
                 <LandPlot className="h-8 w-8 text-primary" />
               </div>
@@ -105,17 +114,22 @@ export default function Index() {
               </p>
             </motion.div>
             
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="bg-card glass-card rounded-xl p-8 flex flex-col items-center"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.5,
+            delay: 0.4
+          }} className="bg-card glass-card rounded-xl p-8 flex flex-col items-center">
               <div className="bg-primary/30 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4">
                 <Users className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Non-Player Characters (NPCs)</h3>
+              <h3 className="text-xl font-semibold mb-2">NPCs</h3>
               <p className="text-muted-foreground text-center">
                 Unique merchants, engineers, and companions to advance your strategy.
               </p>
@@ -137,9 +151,7 @@ export default function Index() {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {nfts.slice(0, 8).map((nft) => (
-            <NFTCard key={nft.id} nft={nft} />
-          ))}
+          {nfts.slice(0, 8).map(nft => <NFTCard key={nft.id} nft={nft} />)}
         </div>
       </section>
       
@@ -185,6 +197,5 @@ export default function Index() {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 }
