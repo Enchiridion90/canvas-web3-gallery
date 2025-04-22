@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 import { NFTCard } from "@/components/NFTCard";
 import { useNFTStore } from "@/store/nftStore";
+import { DynamicGallery } from "@/components/DynamicGallery";
+
 export default function Index() {
   const {
     nfts
@@ -54,11 +56,11 @@ export default function Index() {
           duration: 0.7,
           delay: 0.2
         }} className="flex-1">
-            <div className="grid grid-cols-2 gap-4">
-              {featuredNfts.map(nft => <div key={nft.id} className="aspect-square rounded-xl overflow-hidden shadow-card hover:shadow-card-hover border-2 border-primary/60 transition-all duration-300">
-                  <img src={nft.image} alt={nft.name} className="w-full h-full object-cover" />
-                </div>)}
-            </div>
+            <DynamicGallery images={featuredNfts.map(nft => ({
+              image: nft.image,
+              alt: nft.name,
+              id: nft.id,
+            }))} />
           </motion.div>
         </div>
       </section>
