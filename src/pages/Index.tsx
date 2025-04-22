@@ -8,25 +8,22 @@ import { useNFTStore } from "@/store/nftStore";
 import { DynamicGallery } from "@/components/DynamicGallery";
 
 export default function Index() {
-  const {
-    nfts
-  } = useNFTStore();
+  const { nfts } = useNFTStore();
   const featuredNfts = nfts.slice(0, 4);
-  return <div className="min-h-screen flex flex-col">
+
+  return (
+    <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       {/* Hero Section */}
-      <section className="container mx-auto px-4 pt-28 pb-16 md:pt-36 md:pb-24">
-        <div className="flex flex-col md:flex-row items-center gap-12">
-          <motion.div initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.5
-        }} className="flex-1">
+      <section className="container mx-auto px-4 pt-20 pb-14 md:pt-32 md:pb-20 flex flex-col justify-center items-center">
+        <div className="w-full max-w-6xl flex flex-col-reverse md:flex-row items-center justify-center gap-12 md:gap-8 lg:gap-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex-1 flex flex-col items-center md:items-start text-center md:text-left"
+          >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
               Upgrade Your Game—Trade Rare Digital Assets
             </h1>
@@ -34,37 +31,35 @@ export default function Index() {
               Welcome to the official marketplace for <span className="text-primary font-semibold">Axion</span> game assets.
               Buy, sell, and collect rare characters, exclusive land, and powerful NPCs—all verified and used in-game.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="text-lg rounded-full">
+            <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-4 justify-center md:justify-start">
+              <Button asChild size="lg" className="text-lg rounded-full w-full sm:w-auto">
                 <Link to="/explore">
                   Browse Game Assets <ShoppingCart className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="text-lg rounded-full">
+              <Button asChild size="lg" variant="outline" className="text-lg rounded-full w-full sm:w-auto">
                 <Link to="/create">Create Character</Link>
               </Button>
             </div>
           </motion.div>
-          
-          <motion.div initial={{
-          opacity: 0,
-          scale: 0.9
-        }} animate={{
-          opacity: 1,
-          scale: 1
-        }} transition={{
-          duration: 0.7,
-          delay: 0.2
-        }} className="flex-1">
-            <DynamicGallery images={featuredNfts.map(nft => ({
-              image: nft.image,
-              alt: nft.name,
-              id: nft.id,
-            }))} />
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="flex-1 flex items-center justify-center w-full md:w-auto"
+          >
+            <DynamicGallery
+              images={featuredNfts.map(nft => ({
+                image: nft.image,
+                alt: nft.name,
+                id: nft.id,
+              }))}
+            />
           </motion.div>
         </div>
       </section>
-      
+
       {/* Game NFT Categories Section */}
       <section className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-violet-900 py-16 md:py-24 text-primary-foreground">
         <div className="container mx-auto px-4">
@@ -131,7 +126,7 @@ export default function Index() {
           </div>
         </div>
       </section>
-      
+
       {/* Featured NFTs */}
       <section className="container mx-auto px-4 py-16 md:py-24">
         <div className="flex items-center justify-between mb-12">
@@ -148,7 +143,7 @@ export default function Index() {
           {nfts.slice(0, 8).map(nft => <NFTCard key={nft.id} nft={nft} />)}
         </div>
       </section>
-      
+
       {/* CTA Section */}
       <section className="bg-primary text-primary-foreground py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
@@ -165,7 +160,7 @@ export default function Index() {
           </Button>
         </div>
       </section>
-      
+
       {/* Footer */}
       <footer className="bg-muted/50 py-8">
         <div className="container mx-auto px-4">
@@ -191,5 +186,6 @@ export default function Index() {
           </div>
         </div>
       </footer>
-    </div>;
+    </div>
+  );
 }
