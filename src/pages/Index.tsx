@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { LandPlot, User, Users, ShoppingCart } from "lucide-react";
@@ -16,18 +17,19 @@ export default function Index() {
       <Header />
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 pt-20 pb-14 md:pt-32 md:pb-20 flex flex-col justify-center items-center">
-        <div className="w-full max-w-6xl flex flex-col-reverse md:flex-row items-center justify-center gap-12 md:gap-8 lg:gap-16">
+      <section className="w-full px-0 pt-14 md:pt-24 pb-10 flex flex-col items-center justify-center bg-transparent">
+        <div className="w-full max-w-6xl flex flex-col-reverse md:flex-row items-center justify-center gap-10 md:gap-4 lg:gap-10 mx-auto">
+          {/* Text Content */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex-1 flex flex-col items-center md:items-start text-center md:text-left"
+            className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left justify-center px-4 sm:px-6"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
               Upgrade Your Game—Trade Rare Digital Assets
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 md:pr-12">
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 md:pr-10">
               Welcome to the official marketplace for <span className="text-primary font-semibold">Axion</span> game assets.
               Buy, sell, and collect rare characters, exclusive land, and powerful NPCs—all verified and used in-game.
             </p>
@@ -43,19 +45,22 @@ export default function Index() {
             </div>
           </motion.div>
 
+          {/* Gallery */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="flex-1 flex items-center justify-center w-full md:w-auto"
+            className="w-full md:w-1/2 flex justify-center items-center min-h-[320px] sm:min-h-[360px] md:min-h-[430px] p-2 md:p-0"
           >
-            <DynamicGallery
-              images={featuredNfts.map(nft => ({
-                image: nft.image,
-                alt: nft.name,
-                id: nft.id,
-              }))}
-            />
+            <div className="relative flex justify-center items-center w-full h-full max-w-[380px] sm:max-w-[420px] md:max-w-[470px] mx-auto">
+              <DynamicGallery
+                images={featuredNfts.map(nft => ({
+                  image: nft.image,
+                  alt: nft.name,
+                  id: nft.id,
+                }))}
+              />
+            </div>
           </motion.div>
         </div>
       </section>
