@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { LandPlot, User, Users, ShoppingCart } from "lucide-react";
@@ -7,25 +6,27 @@ import { Header } from "@/components/Header";
 import { NFTCard } from "@/components/NFTCard";
 import { useNFTStore } from "@/store/nftStore";
 import { DynamicGallery } from "@/components/DynamicGallery";
-
 export default function Index() {
-  const { nfts } = useNFTStore();
+  const {
+    nfts
+  } = useNFTStore();
   const featuredNfts = nfts.slice(0, 4);
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Header />
 
       {/* Hero Section */}
       <section className="w-full px-0 pt-14 md:pt-24 pb-10 flex flex-col items-center justify-center bg-transparent">
         <div className="w-full max-w-6xl flex flex-col-reverse md:flex-row items-center justify-center gap-10 md:gap-4 lg:gap-10 mx-auto">
           {/* Text Content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left justify-center px-4 sm:px-6"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.5
+        }} className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left justify-center px-4 sm:px-6">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
               Upgrade Your Game—Trade Rare Digital Assets
             </h1>
@@ -46,20 +47,22 @@ export default function Index() {
           </motion.div>
 
           {/* Gallery */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="w-full md:w-1/2 flex justify-center items-center min-h-[320px] sm:min-h-[360px] md:min-h-[430px] p-2 md:p-0"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          scale: 0.9
+        }} animate={{
+          opacity: 1,
+          scale: 1
+        }} transition={{
+          duration: 0.7,
+          delay: 0.2
+        }} className="w-full md:w-1/2 flex justify-center items-center min-h-[320px] sm:min-h-[360px] md:min-h-[430px] p-2 md:p-0">
             <div className="relative flex justify-center items-center w-full h-full max-w-[380px] sm:max-w-[420px] md:max-w-[470px] mx-auto">
-              <DynamicGallery
-                images={featuredNfts.map(nft => ({
-                  image: nft.image,
-                  alt: nft.name,
-                  id: nft.id,
-                }))}
-              />
+              <DynamicGallery images={featuredNfts.map(nft => ({
+              image: nft.image,
+              alt: nft.name,
+              id: nft.id
+            }))} />
             </div>
           </motion.div>
         </div>
@@ -152,9 +155,7 @@ export default function Index() {
       {/* CTA Section */}
       <section className="bg-primary text-primary-foreground py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Build Your Legendary Collection
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Discover &quot;game name&quot;</h2>
           <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto opacity-90">
             Ready to play? Trade, collect, and own in-game assets that power up your metaverse journey. 
           </p>
@@ -191,6 +192,5 @@ export default function Index() {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 }
