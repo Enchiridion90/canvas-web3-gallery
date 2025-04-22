@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -30,7 +31,7 @@ export const DynamicGallery: React.FC<DynamicGalleryProps> = ({ images }) => {
   const frameProps = [
     {
       // Front-most image
-      className: "absolute left-1/2 top-4 w-[77%] md:w-[85%] aspect-square -translate-x-1/2 z-30 shadow-2xl rounded-xl ring-4 ring-primary bg-card",
+      className: "absolute left-[45%] top-4 w-[77%] md:w-[85%] aspect-square -translate-x-1/2 z-30 shadow-2xl rounded-xl ring-4 ring-primary bg-card",
       style: { transform: "translate(-50%, 0) scale(1.07)" },
       animate: { scale: 1.07, y: 0, boxShadow: "0 16px 32px 0 rgba(70,88,225,0.12)", filter: "brightness(1)" },
       transition: { duration: 0.5 },
