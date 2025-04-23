@@ -145,7 +145,8 @@ export default function Create() {
               </div> : <form onSubmit={handleSubmit} className="space-y-8">
                 {/* File Upload Section */}
                 <div className="space-y-2">
-                  <Label>Image or 3D Model</Label>
+                  <Label>Image Reference
+              </Label>
                   
                   {!previewUrl ? <div className="border-2 border-dashed border-muted-foreground/20 rounded-xl p-8 text-center">
                       <Input type="file" id="nft-file" className="hidden" accept="image/*,model/gltf-binary,model/gltf+json" onChange={handleFileChange} />
@@ -172,7 +173,7 @@ export default function Create() {
                 {/* NFT Details */}
                 <div className="grid gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
+                    <Label htmlFor="name">Character Name</Label>
                     <Input id="name" placeholder="Item name" value={name} onChange={e => setName(e.target.value)} required />
                   </div>
                   
@@ -183,7 +184,7 @@ export default function Create() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="collection">Collection</Label>
+                      <Label htmlFor="collection">Race</Label>
                       <Select value={collection} onValueChange={setCollection}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select collection" />
@@ -204,16 +205,7 @@ export default function Create() {
                 </div>
                 
                 {/* Info Box */}
-                <div className="flex items-start gap-4 p-4 rounded-xl bg-blue-500/10 text-blue-700 dark:text-blue-300">
-                  <Info className="h-5 w-5 mt-0.5 flex-shrink-0" />
-                  <div className="text-sm">
-                    <p className="font-medium mb-1">Gas-free minting</p>
-                    <p>
-                      Your NFT will be created without any upfront gas costs using lazy minting. 
-                      Gas fees will only be paid by the buyer when the NFT is purchased.
-                    </p>
-                  </div>
-                </div>
+                
                 
                 {/* Submit Button */}
                 <div className="pt-4">
