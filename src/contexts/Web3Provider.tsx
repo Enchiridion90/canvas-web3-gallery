@@ -27,12 +27,22 @@ export function Web3Provider({ children }: { children: ReactNode }) {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
-  // Function to connect wallet
-  const connect = async () => {
+  // Check if Web3 provider is available
+  const checkWeb3Provider = () => {
+    if (typeof window === 'undefined') return false;
     if (!window.ethereum) {
+      console.warn('No Web3 provider detected');
+      return false;
+    }
+    return true;
+  };
+
+  // Function to connect wallet with enhanced error handling
+  const connect = async () => {
+    if (!checkWeb3Provider()) {
       toast({
-        title: "MetaMask not found",
-        description: "Please install MetaMask to use this feature",
+        title: "Web3 Provider Not Found",
+        description: "Please install MetaMask or another Web3 wallet to continue",
         variant: "destructive",
       });
       return;
@@ -40,15 +50,21 @@ export function Web3Provider({ children }: { children: ReactNode }) {
 
     try {
       setIsConnecting(true);
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const accounts = await provider.send("eth_requestAccounts", []);
+      const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+      
+      // Request account access
+      await provider.send("eth_requestAccounts", []);
       const signer = provider.getSigner();
+      const account = await signer.getAddress();
+      
+      // Get network info
       const network = await provider.getNetwork();
-      const balance = await provider.getBalance(accounts[0]);
+      const balance = await provider.getBalance(account);
 
+      // Update state with retrieved data
       setProvider(provider);
       setSigner(signer);
-      setAccount(accounts[0]);
+      setAccount(account);
       setChainId(network.chainId);
       setBalance(ethers.utils.formatEther(balance));
       setIsConnected(true);
@@ -56,14 +72,30 @@ export function Web3Provider({ children }: { children: ReactNode }) {
       localStorage.setItem("isWalletConnected", "true");
       
       toast({
-        title: "Wallet connected",
-        description: `Connected to ${shortenAddress(accounts[0])}`,
+        title: "Wallet Connected",
+        description: `Connected to ${shortenAddress(account)}`,
       });
+
+      // Set up listeners for network changes
+      provider.on("network", (newNetwork, oldNetwork) => {
+        if (oldNetwork) {
+          window.location.reload();
+        }
+      });
+
     } catch (error: any) {
       console.error("Error connecting wallet:", error);
+      let errorMessage = "Could not connect to wallet";
+      
+      if (error.code === 4001) {
+        errorMessage = "User rejected connection request";
+      } else if (error.code === -32002) {
+        errorMessage = "Connection request already pending";
+      }
+      
       toast({
-        title: "Connection failed",
-        description: error.message || "Could not connect to wallet",
+        title: "Connection Failed",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -82,35 +114,44 @@ export function Web3Provider({ children }: { children: ReactNode }) {
     localStorage.removeItem("isWalletConnected");
     
     toast({
-      title: "Wallet disconnected",
+      title: "Wallet Disconnected",
       description: "Your wallet has been disconnected",
     });
   };
 
   // Auto connect if previously connected
   useEffect(() => {
-    const checkConnection = async () => {
-      if (window.ethereum && localStorage.getItem("isWalletConnected") === "true") {
+    const autoConnect = async () => {
+      if (checkWeb3Provider() && localStorage.getItem("isWalletConnected") === "true") {
         try {
           await connect();
         } catch (error) {
           console.error("Auto connect failed:", error);
+          localStorage.removeItem("isWalletConnected");
         }
       }
     };
 
-    checkConnection();
+    autoConnect();
   }, []);
 
-  // Listen for account changes
+  // Listen for account and chain changes
   useEffect(() => {
     if (window.ethereum) {
-      const handleAccountsChanged = (accounts: string[]) => {
+      const handleAccountsChanged = async (accounts: string[]) => {
         if (accounts.length === 0) {
           disconnect();
         } else if (isConnected) {
-          setAccount(accounts[0]);
-          updateBalance(accounts[0]);
+          const newAccount = accounts[0];
+          setAccount(newAccount);
+          try {
+            if (provider) {
+              const balance = await provider.getBalance(newAccount);
+              setBalance(ethers.utils.formatEther(balance));
+            }
+          } catch (error) {
+            console.error("Error updating balance:", error);
+          }
         }
       };
 
@@ -126,15 +167,7 @@ export function Web3Provider({ children }: { children: ReactNode }) {
         window.ethereum.removeListener("chainChanged", handleChainChanged);
       };
     }
-  }, [isConnected]);
-
-  // Helper function to update balance
-  const updateBalance = async (address: string) => {
-    if (provider) {
-      const balance = await provider.getBalance(address);
-      setBalance(ethers.utils.formatEther(balance));
-    }
-  };
+  }, [isConnected, provider]);
 
   return (
     <Web3Context.Provider
