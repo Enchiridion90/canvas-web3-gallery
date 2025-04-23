@@ -6,27 +6,26 @@ import { Header } from "@/components/Header";
 import { NFTCard } from "@/components/NFTCard";
 import { useNFTStore } from "@/store/nftStore";
 import { DynamicGallery } from "@/components/DynamicGallery";
+
 export default function Index() {
   const {
     nfts
   } = useNFTStore();
   const featuredNfts = nfts.slice(0, 4);
+
   return <div className="min-h-screen flex flex-col">
       <Header />
 
       {/* Hero Section */}
-      <section className="w-full px-0 pt-14 md:pt-24 pb-10 flex flex-col items-center justify-center bg-transparent">
-        <div className="w-full max-w-6xl flex flex-col-reverse md:flex-row items-center justify-center gap-10 md:gap-4 lg:gap-10 mx-auto">
+      <section className="w-full min-h-[85vh] px-4 md:px-6 pt-20 md:pt-28 pb-16 flex flex-col items-center justify-center bg-transparent relative overflow-hidden">
+        <div className="w-full max-w-7xl flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-8 mx-auto">
           {/* Text Content */}
-          <motion.div initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.5
-        }} className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left justify-center px-4 sm:px-6">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left justify-center"
+          >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
               Upgrade Your Game—Trade Rare Digital Assets
             </h1>
@@ -47,22 +46,18 @@ export default function Index() {
           </motion.div>
 
           {/* Gallery */}
-          <motion.div initial={{
-          opacity: 0,
-          scale: 0.9
-        }} animate={{
-          opacity: 1,
-          scale: 1
-        }} transition={{
-          duration: 0.7,
-          delay: 0.2
-        }} className="w-full md:w-1/2 flex justify-center items-center min-h-[320px] sm:min-h-[360px] md:min-h-[430px] p-2 md:p-0">
-            <div className="relative flex justify-center items-center w-full h-full max-w-[380px] sm:max-w-[420px] md:max-w-[470px] mx-auto">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="w-full lg:w-1/2 flex justify-center items-center min-h-[400px] md:min-h-[500px] relative"
+          >
+            <div className="relative flex justify-center items-center w-full h-full max-w-[480px] mx-auto">
               <DynamicGallery images={featuredNfts.map(nft => ({
-              image: nft.image,
-              alt: nft.name,
-              id: nft.id
-            }))} />
+                image: nft.image,
+                alt: nft.name,
+                id: nft.id
+              }))} />
             </div>
           </motion.div>
         </div>

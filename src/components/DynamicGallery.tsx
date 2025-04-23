@@ -1,39 +1,44 @@
 
 import React, { useEffect, useState, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface DynamicGalleryProps {
   images: { image: string; alt: string; id: string }[];
 }
 
-// Switched order so the first is the most background and the last is the front-most
 const frameProps = [
   {
-    // Previously front-most, now back-most
-    className: "absolute left-1/2 top-20 w-[60%] md:w-[64%] aspect-square -translate-x-1/2 z-0 rounded-xl shadow",
-    style: { transform: "translate(-50%, 0) scale(0.67)" },
-    animate: { scale: 0.67, y: 84, opacity: 0.45, filter: "brightness(0.68)" },
-    transition: { duration: 0.5 }
+    className: "absolute left-1/2 top-1/2 w-[85%] md:w-[90%] aspect-square -translate-x-1/2 -translate-y-1/2 z-30 rounded-xl",
+    variants: {
+      initial: { scale: 0.9, y: 0, opacity: 0 },
+      animate: { scale: 1, y: 0, opacity: 1, filter: "brightness(1)" },
+      exit: { scale: 0.9, y: 20, opacity: 0 }
+    }
   },
   {
-    className: "absolute left-1/2 top-14 w-[64%] md:w-[70%] aspect-square -translate-x-1/2 z-10 rounded-xl shadow-md",
-    style: { transform: "translate(-50%, 0) scale(0.79)" },
-    animate: { scale: 0.79, y: 56, filter: "brightness(0.82)" },
-    transition: { duration: 0.5 }
+    className: "absolute left-1/2 top-1/2 w-[75%] md:w-[80%] aspect-square -translate-x-1/2 -translate-y-1/2 z-20 rounded-xl",
+    variants: {
+      initial: { scale: 0.8, y: -20, opacity: 0 },
+      animate: { scale: 0.85, y: -40, opacity: 0.8, filter: "brightness(0.9)" },
+      exit: { scale: 0.8, y: -60, opacity: 0 }
+    }
   },
   {
-    className: "absolute left-1/2 top-8 w-[70%] md:w-[77%] aspect-square -translate-x-1/2 z-20 rounded-xl shadow-xl",
-    style: { transform: "translate(-50%, 0) scale(0.93)" },
-    animate: { scale: 0.93, y: 28, filter: "brightness(0.9)" },
-    transition: { duration: 0.5 }
+    className: "absolute left-1/2 top-1/2 w-[65%] md:w-[70%] aspect-square -translate-x-1/2 -translate-y-1/2 z-10 rounded-xl",
+    variants: {
+      initial: { scale: 0.7, y: -40, opacity: 0 },
+      animate: { scale: 0.7, y: -80, opacity: 0.6, filter: "brightness(0.8)" },
+      exit: { scale: 0.7, y: -100, opacity: 0 }
+    }
   },
   {
-    // Previously back-most, now front-most and prominent
-    className: "absolute left-[45%] top-4 w-[77%] md:w-[85%] aspect-square -translate-x-1/2 z-30 shadow-2xl rounded-xl ring-4 ring-primary bg-card",
-    style: { transform: "translate(-50%, 0) scale(1.07)" },
-    animate: { scale: 1.07, y: 0, boxShadow: "0 16px 32px 0 rgba(70,88,225,0.12)", filter: "brightness(1)" },
-    transition: { duration: 0.5 }
+    className: "absolute left-1/2 top-1/2 w-[55%] md:w-[60%] aspect-square -translate-x-1/2 -translate-y-1/2 z-0 rounded-xl",
+    variants: {
+      initial: { scale: 0.6, y: -60, opacity: 0 },
+      animate: { scale: 0.6, y: -120, opacity: 0.4, filter: "brightness(0.7)" },
+      exit: { scale: 0.6, y: -140, opacity: 0 }
+    }
   }
 ];
 
@@ -43,10 +48,8 @@ export const DynamicGallery: React.FC<DynamicGalleryProps> = ({ images }) => {
 
   useEffect(() => {
     timeoutRef.current = setTimeout(() => {
-      setPositions((prev) => {
-        return [...prev.slice(1), prev[0]];
-      });
-    }, 5000);
+      setPositions((prev) => [...prev.slice(1), prev[0]]);
+    }, 4000);
 
     return () => {
       if (timeoutRef.current) {
@@ -55,31 +58,43 @@ export const DynamicGallery: React.FC<DynamicGalleryProps> = ({ images }) => {
     };
   }, [positions]);
 
-  // Apply the swapped frameProps order: map the first position in array to the most "background" style
   return (
-    <div className="relative h-[320px] sm:h-[360px] md:h-[430px] w-full flex items-center justify-center">
-      {positions.map((imgIdx, i) => {
-        const nft = images[imgIdx];
-        if (!nft) return null;
-        const fr = frameProps[i];
-        return (
-          <motion.div
-            key={nft.id}
-            initial={{ scale: fr.animate.scale, y: fr.animate.y, opacity: i === 0 ? 0.45 : 1 }}
-            animate={fr.animate}
-            transition={fr.transition}
-            className={cn(fr.className, "overflow-hidden group")}
-            style={fr.style}
-          >
-            <img
-              src={nft.image}
-              alt={nft.alt}
-              className="w-full h-full object-cover select-none pointer-events-none rounded-xl"
-              draggable={false}
-            />
-          </motion.div>
-        );
-      })}
+    <div className="relative h-[400px] md:h-[500px] w-full">
+      <AnimatePresence mode="popLayout">
+        {positions.map((imgIdx, i) => {
+          const nft = images[imgIdx];
+          if (!nft) return null;
+          const fr = frameProps[i];
+          
+          return (
+            <motion.div
+              key={`${nft.id}-${i}`}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={fr.variants}
+              transition={{ 
+                duration: 0.6,
+                ease: [0.32, 0.72, 0, 1]
+              }}
+              className={cn(
+                fr.className,
+                "overflow-hidden group hover:scale-105 transition-transform duration-300"
+              )}
+            >
+              <motion.img
+                src={nft.image}
+                alt={nft.alt}
+                className="w-full h-full object-cover select-none pointer-events-none rounded-xl shadow-2xl"
+                draggable={false}
+                initial={{ scale: 1.2 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.8 }}
+              />
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
     </div>
   );
-}
+};
