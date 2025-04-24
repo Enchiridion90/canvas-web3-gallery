@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Upload, X, Info, Check, Loader2, RefreshCw, Sparkles } from "lucide-react";
@@ -13,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+
+import { useNFTContract } from "@/hooks/useNFTContract";
 
 // Mock contract address
 const NFT_CONTRACT_ADDRESS = "0x1234567890123456789012345678901234567890";
@@ -34,7 +35,6 @@ export default function Create() {
   
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isMinting, setIsMinting] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [mintingStep, setMintingStep] = useState(0);
   const [txHash, setTxHash] = useState<string | null>(null);
@@ -42,6 +42,8 @@ export default function Create() {
   const [showMintSuccessDialog, setShowMintSuccessDialog] = useState(false);
   
   const [currentStep, setCurrentStep] = useState<'traits' | 'generate' | 'approve'>('traits');
+
+  const { mintNFT, isLoading: isMinting, lastMintedNFT } = useNFTContract();
 
   // Race options
   const races = ["Human", "Elf", "Dwarf", "Orc", "Fairy", "Dragon-kin", "Android"];
@@ -168,7 +170,6 @@ export default function Create() {
     }
     
     setShowConfirmDialog(false);
-    setIsMinting(true);
     
     try {
       // Step 1: Upload metadata
@@ -177,34 +178,22 @@ export default function Create() {
       
       // Step 2: Mint the NFT
       setMintingStep(2);
-      // In a real implementation, this would call your actual smart contract
-      const mockTxHash = "0x" + Array(64).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join('');
-      const mockTokenId = Math.floor(Math.random() * 10000).toString();
+      const txHash = await mintNFT(metadataUrl);
       
-      // Simulate transaction confirmation
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      if (!txHash) {
+        throw new Error("Minting failed");
+      }
       
-      setTxHash(mockTxHash);
-      setTokenId(mockTokenId);
+      setTxHash(txHash);
       setMintingStep(3);
       
-      toast({
-        title: "NFT Minted Successfully!",
-        description: `Your character NFT has been minted.`,
-      });
-      
-      // Show success dialog
-      setShowMintSuccessDialog(true);
-      
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error minting NFT:", error);
       toast({
         title: "Minting Failed",
         description: "Could not mint your NFT. Please try again.",
         variant: "destructive"
       });
-    } finally {
-      setIsMinting(false);
     }
   };
 
@@ -481,40 +470,77 @@ export default function Create() {
         </AlertDialogContent>
       </AlertDialog>
       
-      {/* Success Dialog */}
+      {/* Update Success Dialog to show traits */}
       <AlertDialog open={showMintSuccessDialog} onOpenChange={setShowMintSuccessDialog}>
-        <AlertDialogContent>
+        <AlertDialogContent className="sm:max-w-md">
           <AlertDialogHeader>
             <AlertDialogTitle>NFT Created Successfully!</AlertDialogTitle>
             <AlertDialogDescription>
               <div className="space-y-4 mt-4">
-                <p>Your character NFT has been successfully minted on the blockchain.</p>
-                
-                <div className="bg-muted p-4 rounded-md space-y-2 text-sm">
-                  <div>
-                    <span className="font-semibold">Transaction Hash:</span>
-                    <a 
-                      href={`${ETHERSCAN_BASE_URL}${txHash}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="ml-2 text-primary hover:underline truncate"
-                    >
-                      {txHash?.substring(0, 10)}...{txHash?.substring(txHash.length - 8)}
-                    </a>
-                  </div>
-                  
-                  <div>
-                    <span className="font-semibold">View on OpenSea:</span>
-                    <a 
-                      href={`${OPENSEA_BASE_URL}${NFT_CONTRACT_ADDRESS}/${tokenId}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="ml-2 text-primary hover:underline"
-                    >
-                      {name}
-                    </a>
-                  </div>
-                </div>
+                {lastMintedNFT && (
+                  <>
+                    <div className="bg-muted/30 p-4 rounded-lg space-y-3">
+                      <div>
+                        <p className="font-semibold mb-2">Positive Traits:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {lastMintedNFT.positiveTraits.map((trait, index) => (
+                            <span
+                              key={index}
+                              className="px-2 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                            >
+                              {trait}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="font-semibold mb-2">Negative Traits:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {lastMintedNFT.negativeTraits.map((trait, index) => (
+                            <span
+                              key={index}
+                              className="px-2 py-1 bg-destructive/10 text-destructive rounded-full text-sm"
+                            >
+                              {trait}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-muted p-4 rounded-md space-y-2 text-sm">
+                      <div>
+                        <span className="font-semibold">Token ID:</span>
+                        <span className="ml-2">{lastMintedNFT.tokenId}</span>
+                      </div>
+                      
+                      <div>
+                        <span className="font-semibold">Transaction Hash:</span>
+                        <a 
+                          href={`${ETHERSCAN_BASE_URL}${txHash}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="ml-2 text-primary hover:underline truncate"
+                        >
+                          {txHash?.substring(0, 10)}...{txHash?.substring(txHash.length - 8)}
+                        </a>
+                      </div>
+                      
+                      <div>
+                        <span className="font-semibold">View on OpenSea:</span>
+                        <a 
+                          href={`${OPENSEA_BASE_URL}${NFT_CONTRACT_ADDRESS}/${lastMintedNFT.tokenId}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="ml-2 text-primary hover:underline"
+                        >
+                          View NFT
+                        </a>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
