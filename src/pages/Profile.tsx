@@ -17,8 +17,14 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState<string>("owned");
   const [copied, setCopied] = useState(false);
 
-  // Filter NFTs based on active tab/status
+  // Filter NFTs based on active tab/status AND wallet address
   const filteredNfts = nfts.filter((nft) => {
+    // First check if the NFT belongs to the connected wallet
+    if (!account || nft.owner.toLowerCase() !== account.toLowerCase()) {
+      return false;
+    }
+    
+    // Then apply status filters
     if (activeTab === "owned") return nft.status === "owned";
     if (activeTab === "listed") return nft.status === "listed";
     if (activeTab === "sold") return nft.status === "sold";
@@ -41,7 +47,6 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    // Reset copied state when account changes
     setCopied(false);
   }, [account]);
 
@@ -49,7 +54,6 @@ export default function Profile() {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
-        
         <main className="flex-grow flex items-center justify-center">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -60,14 +64,13 @@ export default function Profile() {
             <User className="h-16 w-16 mx-auto mb-6 text-muted-foreground" />
             <h1 className="text-3xl font-bold mb-4">Connect your wallet</h1>
             <p className="text-muted-foreground mb-8">
-              Connect your wallet to view your profile, collection, and manage your NFTs.
+              Connect your wallet to view your NFT collection and manage your assets.
             </p>
             <Button size="lg" onClick={connect}>
               Connect Wallet
             </Button>
           </motion.div>
         </main>
-        
         <footer className="bg-muted/50 py-6">
           <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
             &copy; {new Date().getFullYear()} Canvas NFT Gallery. All rights reserved.
