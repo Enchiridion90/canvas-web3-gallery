@@ -9,7 +9,63 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      generations: {
+        Row: {
+          created_at: string
+          full_prompt: string
+          id: string
+          image_url: string
+          user_prompt: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          full_prompt: string
+          id?: string
+          image_url: string
+          user_prompt: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          full_prompt?: string
+          id?: string
+          image_url?: string
+          user_prompt?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      nfts: {
+        Row: {
+          id: string
+          image_url: string
+          minted_at: string
+          negative_traits: string[]
+          owner: string
+          positive_traits: string[]
+          token_id: string
+        }
+        Insert: {
+          id?: string
+          image_url: string
+          minted_at?: string
+          negative_traits: string[]
+          owner: string
+          positive_traits: string[]
+          token_id: string
+        }
+        Update: {
+          id?: string
+          image_url?: string
+          minted_at?: string
+          negative_traits?: string[]
+          owner?: string
+          positive_traits?: string[]
+          token_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
