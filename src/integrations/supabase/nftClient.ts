@@ -45,11 +45,15 @@ export const nftService = {
   },
   
   async generateImage(userPrompt: string) {
+    // Get the current session using the v2 pattern
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token || '';
+    
     const response = await fetch(`https://xgnaltmjvwyahimumbqt.supabase.co/functions/v1/generate-image`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${supabase.auth.session()?.access_token || ''}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({ userPrompt }),
     });
@@ -63,11 +67,15 @@ export const nftService = {
   },
   
   async getTraitRarityStats() {
+    // Get the current session using the v2 pattern
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token || '';
+    
     const response = await fetch(`https://xgnaltmjvwyahimumbqt.supabase.co/functions/v1/traits-rarity`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${supabase.auth.session()?.access_token || ''}`,
+        'Authorization': `Bearer ${token}`,
       },
     });
     
