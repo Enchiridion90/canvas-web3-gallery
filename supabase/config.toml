@@ -1,1 +1,6 @@
+
 project_id = "xgnaltmjvwyahimumbqt"
+
+[functions.sync-nft-events]
+schedule = "*/1 * * * *"
+verify_jwt = false

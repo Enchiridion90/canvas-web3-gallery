@@ -9,6 +9,21 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      event_cursor: {
+        Row: {
+          id: boolean
+          last_block: number
+        }
+        Insert: {
+          id?: boolean
+          last_block?: number
+        }
+        Update: {
+          id?: boolean
+          last_block?: number
+        }
+        Relationships: []
+      }
       generations: {
         Row: {
           created_at: string
@@ -71,7 +86,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_trait_counts: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

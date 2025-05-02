@@ -1,8 +1,27 @@
+
 # Welcome to your Lovable project
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/6582d26c-df07-49e0-8a98-9fed78735e07
+
+## Environment Variables
+
+The following environment variables are required for the application:
+
+- `SUPABASE_URL`: The URL of your Supabase project
+- `SUPABASE_ANON_KEY`: The public API key for your Supabase project
+- `SUPABASE_SERVICE_KEY`: The service role API key for privileged operations (used by Edge Functions)
+- `ETHEREUM_RPC_URL`: URL to Ethereum RPC provider (e.g., Infura, Alchemy)
+- `CONTRACT_ADDRESS`: Ethereum address of the NFT contract
+- `SORA_URL`: URL for the Sora AI API
+- `SORA_API_KEY`: API key for the Sora AI service
+- `ALLOWED_ORIGIN`: Comma-separated list of allowed origins for CORS (e.g., `http://localhost:3000,https://your-production-site.com`)
+
+For development, you can set these in a `.env.local` file:
+```
+ALLOWED_ORIGIN=http://localhost:3000
+```
 
 ## How can I edit this code?
 

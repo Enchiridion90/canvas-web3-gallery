@@ -1,12 +1,16 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 serve(async (req) => {
+  // Get request origin and apply appropriate CORS headers
+  const requestOrigin = req.headers.get('origin');
+  const headers = getCorsHeaders(requestOrigin);
+
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', { headers });
   }
 
   try {
@@ -15,49 +19,42 @@ serve(async (req) => {
     const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
     
-    // Fetch all NFTs
-    const { data: nfts, error } = await supabase
-      .from('nfts')
-      .select('positive_traits, negative_traits');
+    // Use the authorization header from the request
+    const authHeader = req.headers.get('Authorization');
+    if (authHeader) {
+      supabase.auth.setSession({
+        access_token: authHeader.replace('Bearer ', ''),
+        refresh_token: '',
+      });
+    }
     
-    if (error) throw error;
-
-    // Count trait frequencies
-    const positiveCounts: Record<string, number> = {};
-    const negativeCounts: Record<string, number> = {};
-
-    // Process each NFT to count trait occurrences
-    nfts?.forEach(nft => {
-      // Count positive traits
-      nft.positive_traits.forEach((trait: string) => {
-        positiveCounts[trait] = (positiveCounts[trait] || 0) + 1;
-      });
-      
-      // Count negative traits
-      nft.negative_traits.forEach((trait: string) => {
-        negativeCounts[trait] = (negativeCounts[trait] || 0) + 1;
-      });
-    });
+    console.log("Calling get_trait_counts RPC function");
+    
+    // Call the database function to get trait counts
+    const { data, error } = await supabase.rpc('get_trait_counts');
+    
+    if (error) {
+      throw error;
+    }
 
     return new Response(
-      JSON.stringify({ 
-        positive_traits: positiveCounts,
-        negative_traits: negativeCounts 
-      }),
+      JSON.stringify(data), 
       { 
         headers: { 
-          ...corsHeaders, 
+          ...headers, 
           'Content-Type': 'application/json' 
         } 
       }
     );
   } catch (error) {
+    console.error("Error in traits-rarity function:", error);
+    
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
         status: 500, 
         headers: { 
-          ...corsHeaders, 
+          ...headers, 
           'Content-Type': 'application/json' 
         } 
       }
